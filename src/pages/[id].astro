@@ -1,0 +1,39 @@
+--- 
+import Layout from "../layouts/Layout.astro"
+import {getSpaceLaunchesBy, getSpaceLaunches} from "../components/services/spaceXAPI"
+import CardLaunch from "../components/CardLaunch.astro"
+
+const {id} = Astro.params;
+
+let launch
+
+if(id){
+launch = await getSpaceLaunchesBy({id})
+}
+
+export async function getStaticPaths() {
+    
+    const launches = await getSpaceLaunches()
+
+    return launches.map(launch => ({
+        params: { id: launch.id}
+    }))
+
+
+};
+
+console.log(launch)
+---
+
+
+
+<Layout title={`Lanzamiento ${id}`}>
+    {
+    <CardLaunch
+        id={launch.id}
+        img={launch.links.patch.small}
+        details={launch.details}
+        flightNumber={launch.flight_number}
+    />
+    }
+</Layout>
